@@ -1,0 +1,11 @@
+{
+    "public": [
+        {
+            "id": 1,
+            "name": "example.md",
+            "displayName": "Example Document",
+            "author": "Ed Glendinning",
+            "path": "/example.md"
+        }
+    ]
+}

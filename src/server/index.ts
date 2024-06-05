@@ -4,6 +4,8 @@ import webpack from 'webpack';
 import middleware from "webpack-dev-middleware";
 import webpackConfig from '../../webpack.dev'
 
+import router from "./api";
+
 const server = express();
 
 server.use(cors());
@@ -15,6 +17,8 @@ if (process.env.DEV) {
     const compiler = webpack(webpackConfig);
     server.use(middleware(compiler));
 }
+
+server.use('/api', router);
 
 server.get('*', (req, res) => {
     res.render('index');

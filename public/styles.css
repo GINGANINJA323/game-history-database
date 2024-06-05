@@ -1,4 +1,7 @@
 html {
     margin: 0;
     height: 100vh;
+    font-family: "Merriweather", serif;
+    font-weight: 300;
+    font-style: normal;
 }
