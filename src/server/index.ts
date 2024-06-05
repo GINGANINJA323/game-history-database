@@ -3,14 +3,11 @@ import cors from 'cors';
 import webpack from 'webpack';
 import middleware from "webpack-dev-middleware";
 import webpackConfig from '../../webpack.dev'
-import ejs from 'ejs';
 
 const server = express();
 
 server.use(cors());
-server.set('view engine', 'ejs');
-server.set('views', 'public');
-server.use(express.static(__dirname + '/public'));
+server.use(express.static('public'));
 
 if (process.env.DEV) {
     // Load the webpack-dev-middleware
