@@ -15,7 +15,7 @@ const Header = () => {
     return (
         <HeaderContainer>
             <h1>Game History DB</h1>
-            <Button text={'New entry'} />
+            <Button onClick={() => {}} text={'New entry'} />
         </HeaderContainer>
     );
 }

@@ -5,7 +5,8 @@
             "name": "example.md",
             "displayName": "Example Document",
             "author": "Ed Glendinning",
-            "path": "/example.md"
+            "path": "/example.md",
+            "created": "06-06-24"
         }
     ]
 }
