@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 interface ViewEntryProps {
-    entryId: string;
+    entryId: number;
 }
 
 const ViewEntry = (props: ViewEntryProps) => {

@@ -1,17 +1,26 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import Header from './components/header';
-import EntryList from './components/list-entries';
+import Home from './pages/home';
+import ViewEntry from './pages/view-entry';
 
 const MainContainer = styled.div``;
 
 const App = () => {
+    const [renderedPath, setRenderedPath] = React.useState('home');
     return (
         <MainContainer>
-            <Header />
-            <p>Welcome. Here you can document awesome in-game tales, like epic battles or histories of in-game characters.</p>
-            <p>Pick a document to edit an existing story, or click 'Create New' to start a new one!</p>
-            <EntryList />
+            {
+                (() => {
+                    switch(renderedPath) {
+                        case 'home':
+                            return <Home />
+                        case 'view-entry':
+                            return <ViewEntry entryId={1} />
+                        default:
+                            return <Home />
+                    }
+                })()
+            }
         </MainContainer>
     );
 }
