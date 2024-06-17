@@ -5,3 +5,16 @@ export interface EntryType {
     path: string;
     id: number;
 }
+
+export interface PageDataType {
+    [key: string]: any;
+}
+
+export interface NavDataType {
+    pageName: 'home' | 'view-entry',
+    pageData?: PageDataType;
+}
+
+export interface NavigationContextType {
+    useNav: (page: NavData) => void;
+}

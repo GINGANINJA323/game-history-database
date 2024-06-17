@@ -4,6 +4,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { EntryType } from '../types';
+import NavigationContext from '../context/navigation-context';
 
 const EntryListContainer = styled.div``;
 
@@ -11,6 +12,7 @@ const Entry = styled.div``;
 
 const EntryList = () => {
     const [entries, setEntries] = React.useState<EntryType[]>();
+    const { useNav } = React.useContext(NavigationContext);
     const getEntries = async() => {
         const response = await fetch('/api/get-public-entries');
 
@@ -32,7 +34,7 @@ const EntryList = () => {
             {
                 entries && entries.length ? entries.map(e => (
                     <Entry>
-                        <p>{e.displayName}</p>
+                        <button onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e.id } })}>{e.displayName}</button>
                     </Entry>
                 )) : null
             }

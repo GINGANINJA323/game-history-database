@@ -1,8 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { PageDataType } from '../types';
 
 interface ViewEntryProps {
-    entryId: number;
+    [key: string]: any;
 }
 
 const ViewEntry = (props: ViewEntryProps) => {
@@ -14,6 +15,7 @@ const ViewEntry = (props: ViewEntryProps) => {
 
         if (!response.ok) {
             console.log('Failed to get entry:', entryId);
+            console.log(response);
             return;
         }
 
