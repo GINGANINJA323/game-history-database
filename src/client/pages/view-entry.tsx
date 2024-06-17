@@ -1,5 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { MDXEditor, headingsPlugin } from '@mdxeditor/editor';
+import '@mdxeditor/editor/style.css';
+
 import { PageDataType } from '../types';
 
 interface ViewEntryProps {
@@ -8,19 +11,20 @@ interface ViewEntryProps {
 
 const ViewEntry = (props: ViewEntryProps) => {
     const { entryId } = props;
-    const [file, setFile] = React.useState();
+
+    // TODO: Get a proper type for this
+    const [file, setFile] = React.useState<any>();
 
     const getEntry = async() => {
-        const response  = await fetch(`/api/get-entry/${entryId}`);
+        const response  = await fetch(`/api/get-entry-by-id/${entryId}`);
 
         if (!response.ok) {
             console.log('Failed to get entry:', entryId);
-            console.log(response);
             return;
         }
 
-        console.log(response);
-        setFile(response);
+        const data = await response.text();
+        setFile(data);
     }
 
     React.useEffect(() => {
@@ -30,7 +34,7 @@ const ViewEntry = (props: ViewEntryProps) => {
     return (
         <>
             {
-                file ? <p>There is a file</p> : <p>There is not a file...</p>
+                file ? <MDXEditor markdown={file} plugins={[ headingsPlugin() ]} /> : <p>{`No file found for ID ${entryId}.`}</p>
             }
         </>
     )

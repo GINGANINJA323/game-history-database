@@ -12,3 +12,12 @@ export const getManifestFile = async(): Promise<ManifestType | null> => {
         return null;
     }
 }
+
+export const getFileAtPath = async(docPath: string): Promise<any | null> => {
+    try {
+        return fs.readFile(__dirname + docPath, { encoding: 'utf8' });
+    } catch (e) {
+        console.log('Failed to get manifest', e);
+        return null;
+    }
+}

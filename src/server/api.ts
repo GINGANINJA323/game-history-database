@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { getManifestFile } from './utils';
+import { getFileAtPath, getManifestFile } from './utils';
 
 router.get('/get-public-entries', async(req, res) => {
     // TODO: Once permissions are added, return only public entries
@@ -13,23 +13,32 @@ router.get('/get-public-entries', async(req, res) => {
     return res.status(200).json(manifest.public);
 });
 
-router.get('/get-entry-by-id', async(req, res) => {
+router.get('/get-entry-by-id/:id', async(req, res) => {
     const manifest = await getManifestFile();
 
     if (!manifest) {
         return res.status(500).send();
     }
 
-    if (manifest.public.map(e => e.id).includes(req.body.id)) {
+    const { id } = req.params;
+
+    if (manifest.public.map(e => e.id).includes(Number(id))) {
         // entry is in public, return
-        const file = manifest.public.find(e => e.id === req.body.id);
+        const file = manifest.public.find(e => e.id === Number(id));
 
         if (!file) {
             return res.status(500).send();
         }
 
-        const filePath = `${__dirname}/stored-docs${file.path}`;
-        return res.status(200).sendFile(filePath);
+        const filePath = `/stored-docs${file.path}`;
+        const fileContents = await getFileAtPath(filePath);
+
+        if (!fileContents) {
+            console.log('Failed to read file.');
+            return res.status(500).send();
+        }
+
+        return res.status(200).send(fileContents);
     }
 
     // TODO: For private files, check the author against the user requesting to make sure they have access

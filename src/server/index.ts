@@ -20,7 +20,7 @@ if (process.env.DEV) {
 
 server.use('/api', router);
 
-server.get('*', (req, res) => {
+server.get('/', (req, res) => {
     res.render('index');
 });
 
