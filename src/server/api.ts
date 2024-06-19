@@ -30,8 +30,7 @@ router.get('/get-entry-by-id/:id', async(req, res) => {
             return res.status(500).send();
         }
 
-        const filePath = `/stored-docs${file.path}`;
-        const fileContents = await getFileAtPath(filePath);
+        const fileContents = await getFileAtPath(file.path);
 
         if (!fileContents) {
             console.log('Failed to read file.');

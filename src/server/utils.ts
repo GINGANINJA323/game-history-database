@@ -19,7 +19,7 @@ export const getManifestFile = async(): Promise<ManifestType | null> => {
 
 export const getFileAtPath = async(docPath: string): Promise<any | null> => {
     try {
-        return fs.readFile(__dirname + docPath, { encoding: 'utf8' });
+        return fs.readFile(docPath, { encoding: 'utf8' });
     } catch (e) {
         console.log('Failed to get manifest', e);
         return null;
@@ -30,7 +30,7 @@ export const writeNewFile = async(data: NewDocumentDataType): Promise<boolean> =
     const { contents, displayName, author, isPublic } = data;
 
     // First, update the manifest
-    const docPath = __dirname + `/stored-docs/${name}`;
+    const docPath = __dirname + `/stored-docs/${toFilename(displayName)}.md`;
     const newManifest = await getManifestFile();
     const id = uuidv4();
 

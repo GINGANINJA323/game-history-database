@@ -21,7 +21,7 @@ const Header = () => {
     return (
         <HeaderContainer>
             <HeaderTitle onClick={() => useNav({ pageName: 'home' })}>Game History DB</HeaderTitle>
-            <Button onClick={() => {}} text={'New entry'} />
+            <Button onClick={() => useNav({ pageName: 'view-entry' })} text={'New entry'} />
         </HeaderContainer>
     );
 }
