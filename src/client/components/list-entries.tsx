@@ -6,9 +6,15 @@ import styled from 'styled-components';
 import { EntryType } from '../types';
 import NavigationContext from '../context/navigation-context';
 
-const EntryListContainer = styled.div``;
+const EntryListContainer = styled.div`
+    width: 100%;
+`;
 
-const Entry = styled.div``;
+const Entry = styled.button`
+    border: none;
+    padding: 10px;
+    width: 100%;
+`;
 
 const EntryList = () => {
     const [entries, setEntries] = React.useState<{ [key: string]: EntryType }>();
@@ -34,9 +40,7 @@ const EntryList = () => {
         <EntryListContainer>
             {
                 entries ? Object.keys(entries).map(e => (
-                    <Entry>
-                        <button onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e } })}>{entries[e].displayName}</button>
-                    </Entry>
+                        <Entry onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e } })}>{entries[e].displayName}</Entry>
                 )) : null
             }
         </EntryListContainer>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Button from './button';
+import NavigationContext from '../context/navigation-context';
 
 const HeaderContainer = styled.div`
     display: flex;
@@ -11,10 +12,15 @@ const HeaderContainer = styled.div`
     height: 10%;
 `;
 
+const HeaderTitle = styled.h1`
+    cursor: pointer;
+`;
+
 const Header = () => {
+    const { useNav } = React.useContext(NavigationContext);
     return (
         <HeaderContainer>
-            <h1>Game History DB</h1>
+            <HeaderTitle onClick={() => useNav({ pageName: 'home' })}>Game History DB</HeaderTitle>
             <Button onClick={() => {}} text={'New entry'} />
         </HeaderContainer>
     );
