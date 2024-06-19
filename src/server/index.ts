@@ -10,6 +10,7 @@ const server = express();
 
 server.use(cors());
 server.use(express.static('public'));
+server.use(express.json());
 
 if (process.env.DEV) {
     // Load the webpack-dev-middleware

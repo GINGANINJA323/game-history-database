@@ -1,12 +1,1 @@
-{
-    "public": {
-        "1": {
-            "name": "example.md",
-            "displayName": "Example Document",
-            "author": "Ed Glendinning",
-            "path": "/example.md",
-            "created": "06-06-24",
-            "updated": null
-        }
-    }
-}
+{"public":{"1":{"name":"example.md","displayName":"Example Document","author":"Ed Glendinning","path":"/example.md","created":"06-06-24","updated":"2024-06-19T18:33:40.114Z"}}}

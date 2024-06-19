@@ -1,4 +1,3 @@
-import path from 'path';
 import fs from 'fs/promises';
 import { ManifestType, NewDocumentDataType } from './types';
 import { v4 as uuidv4 } from 'uuid';
@@ -60,7 +59,6 @@ export const writeNewFile = async(data: NewDocumentDataType): Promise<boolean> =
 }
 
 export const writeExistingFile = async(id: string, contents: string, isPublic: boolean): Promise<boolean> => {
-    const docPath = __dirname + `/stored-docs/${name}`;
     const newManifest = await getManifestFile();
     const manifestSection = isPublic ? 'public' : 'private';
 
@@ -75,8 +73,10 @@ export const writeExistingFile = async(id: string, contents: string, isPublic: b
             updated: new Date().toISOString()
         }
 
+        const docPath = __dirname + `/stored-docs/${newManifest[manifestSection][id].name}`;
+
         await fs.writeFile(`${__dirname}/stored-docs/manifest.json`, JSON.stringify(newManifest));
-        await fs.writeFile(docPath, JSON.stringify(contents));
+        await fs.writeFile(docPath, contents);
 
         return true;
     } catch (e) {

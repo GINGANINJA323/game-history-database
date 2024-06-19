@@ -56,7 +56,22 @@ const ViewEntry = (props: ViewEntryProps) => {
     }, []);
 
     const handleSaveFile = async() => {
+        const response = await fetch('/api/save-file', {
+            method: 'POST',
+            body: JSON.stringify({
+                id: entryId,
+                contents: file
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
+        if (!response.ok) {
+            console.log('Failed to save file');
+        }
+
+        console.log('File saved');
     }
 
     const handleSaveAs = async() => {
