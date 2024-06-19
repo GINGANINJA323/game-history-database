@@ -11,7 +11,7 @@ const EntryListContainer = styled.div``;
 const Entry = styled.div``;
 
 const EntryList = () => {
-    const [entries, setEntries] = React.useState<EntryType[]>();
+    const [entries, setEntries] = React.useState<{ [key: string]: EntryType }>();
     const { useNav } = React.useContext(NavigationContext);
     const getEntries = async() => {
         const response = await fetch('/api/get-public-entries');
@@ -22,6 +22,7 @@ const EntryList = () => {
         }
 
         const data = await response.json();
+        console.log(Object.keys(data));
         setEntries(data);
     }
 
@@ -32,9 +33,9 @@ const EntryList = () => {
     return (
         <EntryListContainer>
             {
-                entries && entries.length ? entries.map(e => (
+                entries ? Object.keys(entries).map(e => (
                     <Entry>
-                        <button onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e.id } })}>{e.displayName}</button>
+                        <button onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e } })}>{entries[e].displayName}</button>
                     </Entry>
                 )) : null
             }

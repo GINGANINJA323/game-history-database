@@ -3,10 +3,22 @@ export interface EntryType {
     name: string;
     author: string;
     path: string;
-    id: number;
     created: string;
+    updated: string | null;
 }
 
 export interface ManifestType {
-    public: EntryType[];
+    public: {
+        [key: string]: EntryType;
+    };
+    private: {
+        [key: string]: EntryType;
+    }
+}
+
+export interface NewDocumentDataType {
+    displayName: string,
+    contents: string;
+    author: string;
+    isPublic: boolean;
 }

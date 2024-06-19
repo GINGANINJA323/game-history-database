@@ -1,12 +1,12 @@
 {
-    "public": [
-        {
-            "id": 1,
+    "public": {
+        "1": {
             "name": "example.md",
             "displayName": "Example Document",
             "author": "Ed Glendinning",
             "path": "/example.md",
-            "created": "06-06-24"
+            "created": "06-06-24",
+            "updated": null
         }
-    ]
+    }
 }
