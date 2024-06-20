@@ -33,6 +33,30 @@ const EntryList = () => {
         setEntries(data);
     }
 
+    const deleteEntry = async(id: string) => {
+        if (window.confirm('Are you sure you want to delete this file?')) {
+            const response = await fetch('/api/delete-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id
+                })
+            });
+
+            if (!response.ok) {
+                console.log('Failed to delete file');
+                return;
+            } else {
+                console.log('File deleted');
+                return;
+            }
+        } else {
+            return;
+        }
+    }
+
     React.useEffect(() => {
         getEntries();
     }, []);
@@ -41,7 +65,10 @@ const EntryList = () => {
         <EntryListContainer>
             {
                 entries ? Object.keys(entries).map(e => (
-                        <Entry onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e } })}>{entries[e].displayName}</Entry>
+                        <div>
+                            <Entry onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e } })}>{entries[e].displayName}</Entry>
+                            <button onClick={() => deleteEntry(e)} >Delete Entry</button>
+                        </div>
                 )) : null
             }
         </EntryListContainer>

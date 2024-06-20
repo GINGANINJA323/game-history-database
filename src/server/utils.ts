@@ -2,13 +2,15 @@ import fs from 'fs/promises';
 import { ManifestType, NewDocumentDataType } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
+const manifestPath = `${__dirname}/stored-docs/manifest.json`;
+
 export const toFilename = (id: string, data: string): string => {
     return `${id}_${data.replace(' ', '_')}`;
 }
 
 export const getManifestFile = async(): Promise<ManifestType | null> => {
     try {
-        const manifestRaw = await fs.readFile(__dirname + '/stored-docs/manifest.json', { encoding: 'utf8' });
+        const manifestRaw = await fs.readFile(manifestPath, { encoding: 'utf8' });
         const manifest = JSON.parse(manifestRaw);
         return manifest;
     } catch (e) {
@@ -21,7 +23,7 @@ export const getFileAtPath = async(docPath: string): Promise<any | null> => {
     try {
         return fs.readFile(docPath, { encoding: 'utf8' });
     } catch (e) {
-        console.log('Failed to get manifest', e);
+        console.log('Failed to get file', e);
         return null;
     }
 }
@@ -50,7 +52,7 @@ export const writeNewFile = async(data: NewDocumentDataType): Promise<boolean> =
             path: docPath
         }
 
-        await fs.writeFile(`${__dirname}/stored-docs/manifest.json`, JSON.stringify(newManifest));
+        await fs.writeFile(manifestPath, JSON.stringify(newManifest));
         await fs.writeFile(docPath, contents);
 
         return true;
@@ -76,12 +78,48 @@ export const writeExistingFile = async(id: string, contents: string, isPublic: b
 
         const docPath = __dirname + `/stored-docs/${newManifest[manifestSection][id].name}`;
 
-        await fs.writeFile(`${__dirname}/stored-docs/manifest.json`, JSON.stringify(newManifest));
+        await fs.writeFile(manifestPath, JSON.stringify(newManifest));
         await fs.writeFile(docPath, contents);
 
         return true;
     } catch (e) {
         console.log('Failed to write file', e);
+        return false;
+    }
+}
+
+export const deleteFile = async(id: string) => {
+    try {
+        const newManifest = await getManifestFile();
+
+        if (!newManifest) {
+            console.log('Failed to get manifest');
+            return false;
+        }
+
+        const privateDocs = Object.keys(newManifest.private);
+        const publicDocs = Object.keys(newManifest.public);
+
+        let toDelete;
+
+        if (privateDocs.find(e => e === id)) {
+            toDelete = newManifest.private[id];
+            delete newManifest.private[id];
+        } if (publicDocs.find(e => e === id)) {
+            toDelete = newManifest.public[id];
+            delete newManifest.public[id];
+        } else {
+            console.log('Failed to find document');
+            return false;
+        }
+
+        await fs.writeFile(manifestPath, JSON.stringify(newManifest));
+        await fs.unlink(toDelete.path);
+        console.log(newManifest);
+
+        return true;
+    } catch (e) {
+        console.log('Error deleting file', e);
         return false;
     }
 }

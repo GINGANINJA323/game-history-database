@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { getFileAtPath, getManifestFile, writeExistingFile, writeNewFile } from './utils';
+import { deleteFile, getFileAtPath, getManifestFile, writeExistingFile, writeNewFile } from './utils';
 
 router.get('/get-public-entries', async(req, res) => {
     // TODO: Once permissions are added, return only public entries
@@ -22,22 +22,27 @@ router.get('/get-entry-by-id/:id', async(req, res) => {
 
     const { id } = req.params;
 
-    if (Object.keys(manifest.public).includes(id)) {
-        // entry is in public, return
-        const file = manifest.public[id];
-
-        if (!file) {
-            return res.status(500).send();
+    try {
+        if (Object.keys(manifest.public).includes(id)) {
+            // entry is in public, return
+            const file = manifest.public[id];
+    
+            if (!file) {
+                return res.status(500).send();
+            }
+    
+            const fileContents = await getFileAtPath(file.path);
+    
+            if (!fileContents) {
+                console.log('Failed to read file.');
+                return res.status(500).send();
+            }
+    
+            return res.status(200).send(fileContents);
         }
-
-        const fileContents = await getFileAtPath(file.path);
-
-        if (!fileContents) {
-            console.log('Failed to read file.');
-            return res.status(500).send();
-        }
-
-        return res.status(200).send(fileContents);
+    } catch (e) {
+        console.log("Failed to get entry", e);
+        return res.status(500).send();
     }
 
     // TODO: For private files, check the author against the user requesting to make sure they have access
@@ -82,6 +87,16 @@ router.post('/save-new-file', async(req, res) => {
     if (!result) {
         return res.status(500).send();
     }
+
+    return res.status(200).send();
+});
+
+router.post('/delete-file', async(req, res) => {
+    if (!req.body.id) return res.status(400).send();
+    
+    const result = await deleteFile(req.body.id);
+
+    if (!result) return res.status(500).send();
 
     return res.status(200).send();
 });
