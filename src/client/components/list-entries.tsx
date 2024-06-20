@@ -14,6 +14,7 @@ const Entry = styled.button`
     border: none;
     padding: 10px;
     width: 100%;
+    margin-bottom: 5px;
 `;
 
 const EntryList = () => {
