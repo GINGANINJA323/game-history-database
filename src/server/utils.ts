@@ -2,8 +2,8 @@ import fs from 'fs/promises';
 import { ManifestType, NewDocumentDataType } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const toFilename = (data: string): string => {
-    return data.replace(' ', '_');
+export const toFilename = (id: string, data: string): string => {
+    return `${id}_${data.replace(' ', '_')}`;
 }
 
 export const getManifestFile = async(): Promise<ManifestType | null> => {
@@ -30,9 +30,10 @@ export const writeNewFile = async(data: NewDocumentDataType): Promise<boolean> =
     const { contents, displayName, author, isPublic } = data;
 
     // First, update the manifest
-    const docPath = __dirname + `/stored-docs/${toFilename(displayName)}.md`;
-    const newManifest = await getManifestFile();
     const id = uuidv4();
+    const docName = toFilename(id, displayName)
+    const docPath = __dirname + `/stored-docs/${docName}.md`;
+    const newManifest = await getManifestFile();
 
     try {
         if (!newManifest) {
@@ -41,7 +42,7 @@ export const writeNewFile = async(data: NewDocumentDataType): Promise<boolean> =
         }
 
         newManifest[isPublic ? 'public' : 'private'][id] = {
-            name: toFilename(displayName),
+            name: docName,
             displayName,
             author,
             created: new Date().toISOString(),
