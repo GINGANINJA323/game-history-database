@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import Home from './pages/home';
 import ViewEntry from './pages/view-entry';
 import NavigationContext from './context/navigation-context';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { NavDataType } from './types';
 
 const MainContainer = styled.div``;
@@ -26,6 +29,7 @@ const App = () => {
                     })()
                 }
             </MainContainer>
+            <ToastContainer autoClose={5000} />
         </NavigationContext.Provider>
     );
 }

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const manifestPath = `${__dirname}/stored-docs/manifest.json`;
 
 export const toFilename = (id: string, data: string): string => {
-    return `${id}_${data.replace(' ', '_')}`;
+    return `${id}_${data.replace(' ', '_')}.md`;
 }
 
 export const getManifestFile = async(): Promise<ManifestType | null> => {
@@ -34,7 +34,7 @@ export const writeNewFile = async(data: NewDocumentDataType): Promise<boolean> =
     // First, update the manifest
     const id = uuidv4();
     const docName = toFilename(id, displayName)
-    const docPath = __dirname + `/stored-docs/${docName}.md`;
+    const docPath = __dirname + `/stored-docs/${docName}`;
     const newManifest = await getManifestFile();
 
     try {
@@ -52,11 +52,14 @@ export const writeNewFile = async(data: NewDocumentDataType): Promise<boolean> =
             path: docPath
         }
 
+        console.log('DocPath to save:', docPath);
+
         await fs.writeFile(manifestPath, JSON.stringify(newManifest));
         await fs.writeFile(docPath, contents);
 
         return true;
     } catch(e) {
+        console.log('had an error saving the file');
         return false;
     }
 }

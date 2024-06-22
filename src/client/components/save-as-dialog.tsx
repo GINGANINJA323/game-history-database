@@ -3,16 +3,18 @@ import styled from 'styled-components';
 
 interface SaveAsDialogProps {
     handleSaveAs: (filename: string, isPrivate: boolean) => Promise<void>;
+    handleClose: () => void;
 }
 
 const StyledDialog = styled.dialog`
     display: flex;
     flex-direction: column;
     width: 30%;
+    z-index: 10;
 `;
 
 const SaveAsDialog = (props: SaveAsDialogProps) => {
-    const { handleSaveAs } = props;
+    const { handleSaveAs, handleClose } = props;
     const [filename, setFilename] = React.useState('');
     const [isPrivate, setIsPrivate] = React.useState(false);
 
@@ -23,6 +25,7 @@ const SaveAsDialog = (props: SaveAsDialogProps) => {
             <p>Private?</p>
             <input type='checkbox' onChange={(e) => setIsPrivate(e.target.checked)} />
             <button onClick={() => handleSaveAs(filename, isPrivate)}>Save File</button>
+            <button onClick={handleClose}>Cancel</button>
         </StyledDialog>
     );
 }

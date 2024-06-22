@@ -1,10 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { MDXEditor, headingsPlugin } from '@mdxeditor/editor';
+import { MDXEditor, headingsPlugin, toolbarPlugin, UndoRedo, BoldItalicUnderlineToggles } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 import Header from '../components/header';
 import EditorOptions from '../components/editor-options';
 import SaveAsDialog from '../components/save-as-dialog';
+import { toast } from 'react-toastify';
 
 // Currently setup solely as a housing for the editor, will implement a 'view' mode later.
 
@@ -60,7 +61,8 @@ const ViewEntry = (props: ViewEntryProps) => {
     }, []);
 
     const handleSaveFile = async() => {
-        const response = await fetch('/api/save-file', {
+        console.log('handleSaveFile called')
+        await toast.promise(fetch('/api/save-file', {
             method: 'POST',
             body: JSON.stringify({
                 id: entryId,
@@ -69,19 +71,16 @@ const ViewEntry = (props: ViewEntryProps) => {
             headers: {
                 'Content-Type': 'application/json'
             }
+        }), {
+            pending: 'Saving file...',
+            success: 'File saved!',
+            error: 'Failed to save file!'
         });
-
-        if (!response.ok) {
-            console.log('Failed to save file');
-            return;
-        }
-
-        console.log('File saved');
     }
 
     const handleSaveAs = async(filename: string, isPrivate: boolean) => {
         setDialogOpen(false);
-        const response = await fetch('/api/save-new-file', {
+        await toast.promise(fetch('/api/save-new-file', {
             method: 'POST',
             body: JSON.stringify({
                 displayName: filename,
@@ -92,14 +91,11 @@ const ViewEntry = (props: ViewEntryProps) => {
             headers: {
                 'Content-Type': 'application/json'
             }
+        }), {
+            pending: 'Saving file...',
+            success: 'File saved!',
+            error: 'Failed to save file!'
         });
-
-        if (!response.ok) {
-            console.log('Failed to save new file');
-            return;
-        }
-
-        console.log('New file saved');
     }
 
     return (
@@ -111,14 +107,22 @@ const ViewEntry = (props: ViewEntryProps) => {
                     <EditorContainer>
                         <StyledEditor
                             markdown={file}
-                            plugins={[ headingsPlugin() ]}
+                            plugins={[ headingsPlugin(), toolbarPlugin({
+                                toolbarContents: () => (
+                                    <>
+                                        <UndoRedo />
+                                        <BoldItalicUnderlineToggles />
+                                    </>
+                                )
+                            })
+                        ]}
                             onChange={(content) => setFile(content)}
                         />
-                        <EditorOptions onSave={handleSaveFile} onSaveAs={() => setDialogOpen(true)} />
+                        <EditorOptions onSave={entryId ? handleSaveFile : undefined} onSaveAs={() => setDialogOpen(true)} />
                     </EditorContainer>
             }
             {
-                dialogOpen ? <SaveAsDialog handleSaveAs={handleSaveAs}  /> : null
+                dialogOpen ? <SaveAsDialog handleClose={() => setDialogOpen(false)} handleSaveAs={handleSaveAs}  /> : null
             }
         </ViewEntryContainer>
     )

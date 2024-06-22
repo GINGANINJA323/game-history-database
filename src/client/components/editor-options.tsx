@@ -15,7 +15,7 @@ const EditorButton = styled(Button)`
 `;
 
 interface EditorOptionsProps {
-    onSave: () => void;
+    onSave?: () => void;
     onSaveAs: () => void;
 }
 
@@ -23,7 +23,9 @@ const EditorOptions = (props: EditorOptionsProps) => {
     const { onSave, onSaveAs } = props;
     return (
         <EditorOptionsContainer>
-            <EditorButton text={'Save'} onClick={onSave} />
+            {
+                onSave ? <EditorButton text={'Save'} onClick={onSave} /> : null
+            }
             <EditorButton text={'Save As'} onClick={onSaveAs} />
         </EditorOptionsContainer>
     );
