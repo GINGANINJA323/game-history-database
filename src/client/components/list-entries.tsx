@@ -65,6 +65,7 @@ const EntryList = () => {
             } else {
                 console.log('File deleted');
                 popupState.close();
+                window.location.reload();
                 return;
             }
         } else {
@@ -97,6 +98,7 @@ const EntryList = () => {
         } else {
             console.log('File renamed');
             popupState.close();
+            window.location.reload();
             return;
         }
     }
