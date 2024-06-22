@@ -5,16 +5,29 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { EntryType } from '../types';
 import NavigationContext from '../context/navigation-context';
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import { MoreVert } from '@mui/icons-material';
+import { 
+    usePopupState,
+    bindTrigger,
+    bindMenu
+ } from 'material-ui-popup-state/hooks';
 
 const EntryListContainer = styled.div`
     width: 100%;
 `;
 
-const Entry = styled.button`
+const Entry = styled.div`
     border: none;
     padding: 10px;
     width: 100%;
     margin-bottom: 5px;
+    background-color: #e9e9ed;
+`;
+
+const EntryButton = styled.button`
+    width: 95%;
+    border: none;
 `;
 
 const EntryList = () => {
@@ -47,9 +60,11 @@ const EntryList = () => {
 
             if (!response.ok) {
                 console.log('Failed to delete file');
+                popupState.close();
                 return;
             } else {
                 console.log('File deleted');
+                popupState.close();
                 return;
             }
         } else {
@@ -77,9 +92,11 @@ const EntryList = () => {
 
         if (!response.ok) {
             console.log('Failed to rename file');
+            popupState.close();
             return;
         } else {
             console.log('File renamed');
+            popupState.close();
             return;
         }
     }
@@ -88,15 +105,22 @@ const EntryList = () => {
         getEntries();
     }, []);
 
+    const popupState = usePopupState({ variant: 'popper' });
+
     return (
         <EntryListContainer>
             {
                 entries ? Object.keys(entries).map(e => (
-                        <div>
-                            <Entry onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e } })}>{entries[e].displayName}</Entry>
-                            <button onClick={() => renameEntry(e)} >Rename Entry</button>
-                            <button onClick={() => deleteEntry(e)} >Delete Entry</button>
-                        </div>
+                        <Entry>
+                            <EntryButton onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e } })}>{entries[e].displayName}</EntryButton>
+                            <IconButton {...bindTrigger(popupState)}>
+                                <MoreVert />
+                            </IconButton>
+                            <Menu { ...bindMenu(popupState) }>
+                                <MenuItem onClick={() => renameEntry(e)} >Rename Entry</MenuItem>
+                                <MenuItem onClick={() => deleteEntry(e)} >Delete Entry</MenuItem>
+                            </Menu>
+                        </Entry>
                 )) : null
             }
         </EntryListContainer>
