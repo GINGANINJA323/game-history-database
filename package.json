@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "DEV=true nodemon --ignore src/server/stored-docs src/server/index.ts",
-    "start:prod": "",
-    "build": ""
+    "build": "webpack --config webpack.prod.ts"
   },
   "author": "edward82009@hotmail.com",
   "license": "ISC",
