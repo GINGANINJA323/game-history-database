@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { deleteFile, getFileAtPath, getManifestFile, writeExistingFile, writeNewFile } from './utils';
+import { deleteFile, getFileAtPath, getManifestFile, renameFile, writeExistingFile, writeNewFile } from './utils';
 
 router.get('/get-public-entries', async(req, res) => {
     // TODO: Once permissions are added, return only public entries
@@ -97,6 +97,22 @@ router.post('/delete-file', async(req, res) => {
     const result = await deleteFile(req.body.id);
 
     if (!result) return res.status(500).send();
+
+    return res.status(200).send();
+});
+
+router.post('/rename-file', async(req, res) => {
+    if (!req.body.id || !req.body.newName) {
+        return res.status(400).send();
+    }
+
+    const { id, newName } = req.body;
+
+    const result = await renameFile(id, newName);
+
+    if (!result) {
+        return res.status(500).send();
+    }
 
     return res.status(200).send();
 });

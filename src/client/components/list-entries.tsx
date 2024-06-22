@@ -57,6 +57,33 @@ const EntryList = () => {
         }
     }
 
+    const renameEntry = async(id: string) => {
+        const newName = window.prompt('Enter new filename:');
+
+        if (!newName) {
+            return;
+        }
+
+        const response = await fetch('/api/rename-file', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id,
+                newName
+            })
+        });
+
+        if (!response.ok) {
+            console.log('Failed to rename file');
+            return;
+        } else {
+            console.log('File renamed');
+            return;
+        }
+    }
+
     React.useEffect(() => {
         getEntries();
     }, []);
@@ -67,6 +94,7 @@ const EntryList = () => {
                 entries ? Object.keys(entries).map(e => (
                         <div>
                             <Entry onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e } })}>{entries[e].displayName}</Entry>
+                            <button onClick={() => renameEntry(e)} >Rename Entry</button>
                             <button onClick={() => deleteEntry(e)} >Delete Entry</button>
                         </div>
                 )) : null

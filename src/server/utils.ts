@@ -88,6 +88,16 @@ export const writeExistingFile = async(id: string, contents: string, isPublic: b
     }
 }
 
+const findDocument = (id: string, manifest: ManifestType) => {
+    if (Object.keys(manifest.public).find(e => e === id)) {
+        return 'public';
+    } if (Object.keys(manifest.private).find(e => e === id)) {
+        return 'private';
+    } else {
+        return false;
+    }
+}
+
 export const deleteFile = async(id: string) => {
     try {
         const newManifest = await getManifestFile();
@@ -97,24 +107,17 @@ export const deleteFile = async(id: string) => {
             return false;
         }
 
-        const privateDocs = Object.keys(newManifest.private);
-        const publicDocs = Object.keys(newManifest.public);
+        const loc = findDocument(id, newManifest);
 
-        let toDelete;
-
-        if (privateDocs.find(e => e === id)) {
-            toDelete = newManifest.private[id];
-            delete newManifest.private[id];
-        } if (publicDocs.find(e => e === id)) {
-            toDelete = newManifest.public[id];
-            delete newManifest.public[id];
-        } else {
-            console.log('Failed to find document');
+        if (!loc) {
             return false;
         }
 
+        const toDelete = newManifest[loc][id].path;
+        delete newManifest[loc][id];
+
         await fs.writeFile(manifestPath, JSON.stringify(newManifest));
-        await fs.unlink(toDelete.path);
+        await fs.unlink(toDelete);
         console.log(newManifest);
 
         return true;
@@ -122,4 +125,22 @@ export const deleteFile = async(id: string) => {
         console.log('Error deleting file', e);
         return false;
     }
+}
+
+export const renameFile = async(id: string, newName: string) => {
+    const newManifest = await getManifestFile();
+
+    if (!newManifest) {
+        return false;
+    }
+
+    const loc = findDocument(id, newManifest);
+
+    if (!loc) {
+        return false;
+    }
+
+    newManifest[loc][id].displayName = newName;
+
+    await fs.writeFile(manifestPath, JSON.stringify(newManifest));
 }
