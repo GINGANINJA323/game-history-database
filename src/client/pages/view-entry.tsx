@@ -27,11 +27,12 @@ const EditorContainer = styled.div`
     border: 1px solid black;
     border-radius: 5px;
     align-self: center;
+    overflow: scroll;
 `;
 
-const StyledEditor = styled(MDXEditor)`
-    height: 75vh;
-`
+// const StyledEditor = styled(MDXEditor)`
+//     height: 75vh;
+// `
 
 const ViewEntry = (props: ViewEntryProps) => {
     const { entryId } = props;
@@ -104,8 +105,9 @@ const ViewEntry = (props: ViewEntryProps) => {
             {
                 entryId && !file ?
                     <p>Failed to get entry</p> :
-                    <EditorContainer>
-                        <StyledEditor
+                    <>
+                        <EditorContainer>
+                        <MDXEditor
                             markdown={file}
                             plugins={[ headingsPlugin(), toolbarPlugin({
                                 toolbarContents: () => (
@@ -118,8 +120,9 @@ const ViewEntry = (props: ViewEntryProps) => {
                         ]}
                             onChange={(content) => setFile(content)}
                         />
+                        </EditorContainer>
                         <EditorOptions onSave={entryId ? handleSaveFile : undefined} onSaveAs={() => setDialogOpen(true)} />
-                    </EditorContainer>
+                    </>
             }
             {
                 dialogOpen ? <SaveAsDialog handleClose={() => setDialogOpen(false)} handleSaveAs={handleSaveAs}  /> : null

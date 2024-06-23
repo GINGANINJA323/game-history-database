@@ -5,8 +5,11 @@ import Button from './button';
 const EditorOptionsContainer = styled.div`
     display: flex;
     flex-direction: row;
-    width: 100%;
-    border-top: 1px solid black;
+    width: 90%;
+    border: 1px solid black;
+    border-top: none;
+    border-radius: 5px;
+    align-self: center;
 `;
 
 const EditorButton = styled(Button)`
