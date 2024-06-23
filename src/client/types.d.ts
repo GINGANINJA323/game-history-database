@@ -18,3 +18,7 @@ export interface NavDataType {
 export interface NavigationContextType {
     useNav: (page: NavData) => void;
 }
+
+export interface ManifestObjectType {
+    [key: string]: EntryType;
+}

@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import { EntryType } from '../types';
+import { EntryType, ManifestObjectType } from '../types';
 import NavigationContext from '../context/navigation-context';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
@@ -12,6 +12,11 @@ import {
     bindTrigger,
     bindMenu
  } from 'material-ui-popup-state/hooks';
+
+interface EntryListProps {
+    entries: ManifestObjectType | undefined;
+    searchTerm: string;
+} 
 
 const EntryListContainer = styled.div`
     width: 100%;
@@ -30,21 +35,9 @@ const EntryButton = styled.button`
     border: none;
 `;
 
-const EntryList = () => {
-    const [entries, setEntries] = React.useState<{ [key: string]: EntryType }>();
+const EntryList = (props: EntryListProps) => {
     const { useNav } = React.useContext(NavigationContext);
-    const getEntries = async() => {
-        const response = await fetch('/api/get-public-entries');
-
-        if (!response.ok) {
-            console.log('Failed to get entries');
-            return;
-        }
-
-        const data = await response.json();
-        console.log(Object.keys(data));
-        setEntries(data);
-    }
+    const { entries, searchTerm } = props;
 
     const deleteEntry = async(id: string) => {
         if (window.confirm('Are you sure you want to delete this file?')) {
@@ -103,16 +96,12 @@ const EntryList = () => {
         }
     }
 
-    React.useEffect(() => {
-        getEntries();
-    }, []);
-
     const popupState = usePopupState({ variant: 'popper' });
 
     return (
         <EntryListContainer>
             {
-                entries ? Object.keys(entries).map(e => (
+                entries ? Object.keys(entries).filter((e) => entries[e].displayName.toLowerCase().includes(searchTerm)).map(e => (
                         <Entry>
                             <EntryButton onClick={() => useNav({ pageName: 'view-entry', pageData: { entryId: e } })}>{entries[e].displayName}</EntryButton>
                             <IconButton {...bindTrigger(popupState)}>
