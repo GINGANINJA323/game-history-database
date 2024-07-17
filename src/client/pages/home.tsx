@@ -28,7 +28,7 @@ const Home = () => {
 
     React.useEffect(() => {
         getEntries();
-    });
+    }, []);
 
     return (
         <>
