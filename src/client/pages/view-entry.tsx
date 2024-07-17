@@ -27,12 +27,8 @@ const EditorContainer = styled.div`
     border: 1px solid black;
     border-radius: 5px;
     align-self: center;
-    overflow: scroll;
+    overflow-y: scroll;
 `;
-
-// const StyledEditor = styled(MDXEditor)`
-//     height: 75vh;
-// `
 
 const ViewEntry = (props: ViewEntryProps) => {
     const { entryId } = props;
